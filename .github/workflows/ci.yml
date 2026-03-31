@@ -21,8 +21,17 @@ jobs:
           pip install -r requirements.txt
           pip install dvc[s3]
 
+      # 🔹 ADD THIS STEP (CRITICAL)
+      - name: Configure AWS credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
+
       - name: Pull data from S3
         run: dvc pull
 
       - name: Train model
         run: python src/train.py data/data_v2.csv
+git add .
